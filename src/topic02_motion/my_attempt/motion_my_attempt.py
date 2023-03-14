@@ -30,38 +30,61 @@ def move(topic, distance, speed, is_forward=True):
         velocity_publisher.publish(velocity_message)
         rate.sleep()
         distance_travelled = math.sqrt((x-x0)**2 + (y-y0)**2)
-        rospy.loginfo("Travelled:%f"%distance_travelled)
+        rospy.loginfo("Target:%f, Travelled:%f"%(distance,distance_travelled))
     
     velocity_message.linear.x = 0
     velocity_publisher.publish(velocity_message)
     rospy.loginfo("Reached")
     return "Reached"
 
-def rotate(topic, angle_of_rotation, angular_speed, anti_clockwise=True):
+def rotate(topic, angle_rad, angular_speed_rad, anti_clockwise=True):
     angular_velocity_message = Twist()
     angular_velocity_publisher = rospy.Publisher(topic, Twist, queue_size=10)
     
     if anti_clockwise:
-        angular_velocity_message.angular.z = angular_speed
+        angular_velocity_message.angular.z = angular_speed_rad
     else:
-        angular_velocity_message.angular.z = -angular_speed
+        angular_velocity_message.angular.z = -angular_speed_rad
     
     global theta
-    theta0 = theta
-    rotated_angle = 0
+    target_angle = (theta + angle_rad)%(2*math.pi)
+    if(target_angle > math.pi):
+        target_angle -= 2*math.pi
+    elif(target_angle < -math.pi):
+        target_angle += 2*math.pi
+
     rate = rospy.Rate(10)
     
-    while(abs(rotated_angle) < abs(angle_of_rotation)):
+    while(abs(theta-target_angle)>0.01):
         angular_velocity_publisher.publish(angular_velocity_message)
+        rospy.loginfo("Relative:%s, target:%s, current:%s"%(angle_rad, target_angle,theta))
+        
         rate.sleep()
-        rotated_angle = theta - theta0
-        rospy.loginfo("Target:%s, rotated:%s"%(angle_of_rotation,theta))
-    
+        
     angular_velocity_message.angular.z = 0
     angular_velocity_publisher.publish(angular_velocity_message)
-    rospy.loginfo("Finished")
+    rospy.loginfo("Rotation Finished")
     return "Finished"
     
+def go_to(topic, x_goal, y_goal):
+    global x,y,theta
+    angle_of_rotation = math.atan2(y_goal-y, x_goal-x) - theta
+
+    angular_speed = 0.2
+    if(angle_of_rotation > 0): 
+        anti_clockwise = True
+    else:
+        anti_clockwise = False
+
+    rotate(topic, angle_of_rotation, angular_speed, anti_clockwise)
+    
+    distance = math.sqrt((x_goal-x)**2 + (y_goal-y)**2)
+    
+    speed = 1
+    move(topic, distance, speed, True)
+    
+    rospy.loginfo("Destination Reached")
+    return "Reached"
 
 if __name__ == "__main__":
     rospy.init_node("motion_my_attempt")
@@ -72,5 +95,6 @@ if __name__ == "__main__":
     rospy.sleep(0.1)
     
     velocity_topic = "/turtle1/cmd_vel"
-    rotate(velocity_topic, 1, 0.1)
-    move(velocity_topic, 3, 1)
+    # rotate(velocity_topic, 1, 1)
+    # move(velocity_topic, 3, 1)
+    go_to(velocity_topic, 0,0)

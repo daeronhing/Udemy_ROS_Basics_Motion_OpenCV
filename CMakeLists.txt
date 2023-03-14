@@ -111,3 +111,7 @@ target_link_libraries(open_copy_cpp ${OpenCV_LIBRARIES})
 add_executable(image_pub_sub_cpp src/topic03_perception/cpp/image_pub_sub.cpp)
 target_link_libraries(image_pub_sub_cpp ${catkin_LIBRARIES})
 target_link_libraries(image_pub_sub_cpp ${OpenCV_LIBRARIES})
+
+# my attempt
+add_executable(motion_my_attempt src/topic02_motion/my_attempt/motion_my_attempt.cpp)
+target_link_libraries(motion_my_attempt ${catkin_LIBRARIES})
