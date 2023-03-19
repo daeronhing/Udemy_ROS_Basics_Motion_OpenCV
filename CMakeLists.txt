@@ -115,3 +115,14 @@ target_link_libraries(image_pub_sub_cpp ${OpenCV_LIBRARIES})
 # my attempt
 add_executable(motion_my_attempt src/topic02_motion/my_attempt/motion_my_attempt.cpp)
 target_link_libraries(motion_my_attempt ${catkin_LIBRARIES})
+
+add_executable(topic3_assignment src/topic03_perception/cpp/topic3_assignment.cpp)
+target_link_libraries(topic3_assignment ${catkin_LIBRARIES})
+target_link_libraries(topic3_assignment ${OpenCV_LIBRARIES})
+
+add_executable(video_publisher src/topic03_perception/cpp/video_publisher.cpp)
+target_link_libraries(video_publisher ${catkin_LIBRARIES})
+target_link_libraries(video_publisher ${OpenCV_LIBRARIES})
+
+add_executable(move_robot src/topic04_perception02_laser/my_attempts/move_robot.cpp)
+target_link_libraries(move_robot ${catkin_LIBRARIES})
