@@ -42,6 +42,8 @@ void scanCallback(sensor_msgs::LaserScan scan_msg) {
     double rad = 5 / 180 * PI;
     double increment = scan_msg.angle_increment;
     int index = rad/increment;
+
+    for(int i=0; )
     
 
 }

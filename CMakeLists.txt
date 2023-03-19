@@ -124,5 +124,8 @@ add_executable(video_publisher src/topic03_perception/cpp/video_publisher.cpp)
 target_link_libraries(video_publisher ${catkin_LIBRARIES})
 target_link_libraries(video_publisher ${OpenCV_LIBRARIES})
 
-add_executable(move_robot src/topic04_perception02_laser/my_attempts/move_robot.cpp)
-target_link_libraries(move_robot ${catkin_LIBRARIES})
+# add_executable(move_robot src/topic04_perception02_laser/my_attempts/move_robot.cpp)
+# target_link_libraries(move_robot ${catkin_LIBRARIES})
+
+add_executable(test_sub src/test_sub.cpp)
+target_link_libraries(test_sub ${catkin_LIBRARIES})
